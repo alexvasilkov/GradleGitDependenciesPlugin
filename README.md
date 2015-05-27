@@ -13,11 +13,11 @@ should be completely the same. Otherwise plugin will fail build process.
 1. Plugin automatically updates repository if version info was updated.
 But if there are any uncommited changes in local repo, than plugin will fail build process
 until you manually resolve conflicts.
-1. Removed dependencies will be automatically cleaned from `libraries` dir.
+1. Removed dependencies will be automatically cleaned from `libraries` directory.
 
 ### How to use ###
 
-In `settings.gradle` file add next lines
+In `settings.gradle` file add next lines:
 
     buildscript {
         repositories {
