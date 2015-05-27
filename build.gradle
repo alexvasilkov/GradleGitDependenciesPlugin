@@ -1,0 +1,16 @@
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+
+    compile 'org.tmatesoft.svnkit:svnkit:1.8.5'
+    compile 'org.ajoberstar:grgit:1.2.0'
+}
+
+// Build & upload: './gradlew clean build uploadArchives'
+apply from: "${rootDir}/gradle/scripts/gradle-plugin-mvn-push.gradle"
