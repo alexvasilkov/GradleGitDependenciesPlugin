@@ -1,12 +1,13 @@
 package com.alexvasilkov.vcs.dependency
 
+import com.alexvasilkov.vcs.VcsProperties
 import com.alexvasilkov.vcs.util.CredentialsHelper
 import org.gradle.api.GradleException
 import org.gradle.api.initialization.ProjectDescriptor
 
 abstract class VcsDependency {
 
-    private static final String DEFAULT_DIR = '/libraries'
+    private static final String DEFAULT_DIR = 'libraries'
 
     String name
     String url
@@ -17,7 +18,7 @@ abstract class VcsDependency {
     VcsDependency(ProjectDescriptor project, Map map) {
         name = map.name
         url = map.url
-        dir = map.dir
+        dir = map.dir ? map.dir as File : null
         path = map.path
         username = map.username
         password = map.password
@@ -66,6 +67,8 @@ abstract class VcsDependency {
     }
 
     static File getDefaultDir(ProjectDescriptor project) {
+        if (VcsProperties.instance.dir) return VcsProperties.instance.dir as File
+
         ProjectDescriptor root = project
         while (root.parent != null) root = root.parent
         return new File(root.projectDir, DEFAULT_DIR)
