@@ -1,6 +1,8 @@
 GradleVcsDependencyPlugin
 =========================
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alexvasilkov/gradle-vcs-dependency/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alexvasilkov/gradle-vcs-dependency)
+
 Gradle plugin to add external git/svn repository dependencies.
 
 ### How it works ###
