@@ -13,6 +13,9 @@ import org.tmatesoft.svn.core.wc.*
 class SvnHelper {
 
     static void init(SvnDependency repo) {
+        // Looks like IntelliJ IDEA forces SVNKit to use SSLv3 only, but this will fail for TLS 1.2
+        System.clearProperty("svnkit.http.sslProtocols")
+
         boolean exists = isRepositoryExists(repo)
         SVNClientManager client = getClient(repo)
 
