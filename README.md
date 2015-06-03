@@ -62,7 +62,7 @@ In `build.gradle` add next method:
 
 If there were no username specified (like shown above), than plugin will look
 first for property named `[name in upper case]_USERNAME` and than for general property
-`VCS_USERNAME` in this places:
+`VCS_USERNAME` in next places:
 
 1. `vcs.properties` in the root directory of the project
 1. `gradle.properties` in the root directory of the project
