@@ -3,7 +3,7 @@ GradleVcsDependencyPlugin
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alexvasilkov/gradle-vcs-dependency/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alexvasilkov/gradle-vcs-dependency)
 
-Gradle plugin to add external git/svn repository dependencies.
+Gradle plugin to add external git/svn repositories as dependencies.
 
 ### How it works ###
 
@@ -29,7 +29,7 @@ In `settings.gradle` file add next lines:
             mavenCentral()
         }
         dependencies {
-            classpath 'com.alexvasilkov:gradle-vcs-dependency:0.2.1'
+            classpath 'com.alexvasilkov:gradle-vcs-dependency:0.2.2'
         }
     }
 
