@@ -72,7 +72,7 @@ class CredentialsHelper {
         File vcsFile = new File(VCS_FILE)
         if (vcsFile.exists()) {
             vcsProps = new Properties()
-            vcsFile.withInputStream { stream -> vcs.load(stream) }
+            vcsFile.withInputStream { stream -> vcsProps.load(stream) }
         }
 
         File gradleFile = new File(GRADLE_FILE)
