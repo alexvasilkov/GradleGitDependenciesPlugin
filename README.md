@@ -50,14 +50,16 @@ In `build.gradle` add next method:
                 path: '[Path within repo url, i.e. /trunk/library/. Optional]',
                 rev: [Revision number. Required],
                 username: '[Username to access repo. Optional]',
-                password: '[Password. Optional]'
+                password: '[Password. Optional]',
+                addDependency: [Whether to add project dependency or not. Optional, true by default]
 
         git name: '[Git dependency name. Required]',
                 url: '[Git repository url. Required]',
-                path: '[Path within repo which should be added as dependency, i.e. /library/. Optional.]',
+                path: '[Path within repo which should be added as dependency, i.e. /library/. Optional]',
                 commit: '[Commit id of any length. Required]',
                 username: '[Username to access repo. Optional]',
-                password: '[Password. Optional]'
+                password: '[Password. Optional]',
+                addDependency: [Whether to add project dependency or not. Optional, true by default]
     }
 
 If there were no username specified (like shown above), than plugin will look

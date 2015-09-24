@@ -14,14 +14,16 @@ abstract class VcsDependency {
     File dir
     String path
     String username, password
+    boolean addDependency
 
     VcsDependency(ProjectDescriptor project, Map map) {
         name = map.name
         url = map.url
-        dir = map.dir ? map.dir as File : null
+        dir = map.dir instanceof String || map.dir instanceof File ? map.dir as File : null
         path = map.path
         username = map.username
         password = map.password
+        addDependency = map.addDependency instanceof Boolean ? map.addDependency : true
 
         if (!dir) dir = getDefaultDir(project)
         if (!username) username = CredentialsHelper.username(name)

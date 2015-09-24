@@ -32,7 +32,7 @@ class VcsSettingsPlugin implements Plugin<Settings> {
         // Adding created vcs projects dependencies for each project
         settings.gradle.afterProject { Project p ->
             dependencies.get(p.name).each { VcsDependency d ->
-                p.dependencies.add('compile', p.project(projectName(d)))
+                if (d.addDependency) p.dependencies.add('compile', p.project(projectName(d)))
             }
         }
     }
@@ -71,10 +71,12 @@ class VcsSettingsPlugin implements Plugin<Settings> {
                             GitHelper.init((GitDependency) d)
                         }
 
-                        s.include(projectName(d))
-                        DefaultProjectDescriptor newProject = s.project(projectName(d))
-                        newProject.projectDir = d.projectDir
-                        newProjects.add(newProject)
+                        if (d.addDependency) {
+                            s.include(projectName(d))
+                            DefaultProjectDescriptor newProject = s.project(projectName(d))
+                            newProject.projectDir = d.projectDir
+                            newProjects.add(newProject)
+                        }
                     }
                 }
             }

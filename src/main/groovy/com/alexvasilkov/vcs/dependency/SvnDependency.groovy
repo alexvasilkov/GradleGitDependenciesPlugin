@@ -9,7 +9,7 @@ class SvnDependency extends VcsDependency {
 
     SvnDependency(ProjectDescriptor project, Map map) {
         super(project, map)
-        rev = map.rev
+        rev = map.rev instanceof Long || map.rev instanceof Integer ? map.rev : 0L
     }
 
     @Override
