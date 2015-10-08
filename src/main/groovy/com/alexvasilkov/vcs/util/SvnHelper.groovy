@@ -24,26 +24,27 @@ class SvnHelper {
             long rev = repo.rev
             File dir = repo.repoDir
 
-            if (localRev < rev) {
-                println "Svn local revision ${localRev} is less then target revision" +
-                        " ${rev} for '${dir}'"
+            boolean shouldUpdate = false
+
+            if (repo.isHead) {
+                println "Svn updating ${localRev} to HEAD"
+                shouldUpdate = true
+            } else if (localRev < rev) {
+                println "Svn local revision ${localRev} is less then target revision ${rev} for '${dir}'"
+                println "Svn updating to revision ${rev} for '${dir}'"
+                shouldUpdate = true
+            } else if (localRev > rev) {
+                println "Svn local revision ${localRev} is greater then target revision ${rev} for '${dir}'"
+                println "Svn reverting to revision ${rev} for '${dir}'"
+                shouldUpdate = true
+            }
+
+            if (shouldUpdate) {
                 if (hasLocalChanges(client, repo)) {
                     throw new GradleException("Svn cannot update from revision ${localRev}" +
-                            " to revision ${rev}, '${dir}' contains local changes.\n" +
-                            "Commit or revert all changes manually.")
+                            " to ${repo.isHead ? 'HEAD' : "revision ${rev}"}, '${dir}' contains local changes." +
+                            "\nCommit or revert all changes manually.")
                 } else {
-                    println "Svn updating to revision ${rev} for '${dir}'"
-                    update(client, repo)
-                }
-            } else if (localRev > rev) {
-                println "Svn local revision ${localRev} is greater then target revision" +
-                        " ${rev} for '${dir}'"
-                if (hasLocalChanges(client, repo)) {
-                    throw new GradleException("Svn cannot revert from revision ${localRev}" +
-                            " to revision ${rev}, '${dir}' contains local changes.\n" +
-                            "Please commit or revert all changes manually.")
-                } else {
-                    println "Svn reverting to revision ${rev} for '${dir}'"
                     update(client, repo)
                 }
             }
@@ -73,7 +74,7 @@ class SvnHelper {
     }
 
     private static SVNRevision getRevision(SvnDependency repo) {
-        return SVNRevision.create(repo.rev)
+        return repo.isHead ? SVNRevision.HEAD : SVNRevision.create(repo.rev)
     }
 
 

@@ -9,25 +9,28 @@ abstract class VcsDependency {
 
     private static final String DEFAULT_DIR = 'libraries'
 
-    String name
-    String url
-    File dir
-    String path
-    String username, password
-    boolean addDependency
+    final String name
+    final String url
+    final File dir
+    final String path
+    final String username, password
+    final boolean includeProject
+    final boolean addDependency
+
+    final File repoDir
 
     VcsDependency(ProjectDescriptor project, Map map) {
         name = map.name
         url = map.url
-        dir = map.dir instanceof String || map.dir instanceof File ? map.dir as File : null
+        File mapDir = map.dir instanceof String || map.dir instanceof File ? map.dir as File : null
+        dir = (mapDir ? mapDir : getDefaultDir(project)).canonicalFile
         path = map.path
-        username = map.username
-        password = map.password
+        username = map.username ? map.username : CredentialsHelper.username(name)
+        password = map.password ? map.password : CredentialsHelper.password(name)
+        includeProject = map.includeProject instanceof Boolean ? map.includeProject : true
         addDependency = map.addDependency instanceof Boolean ? map.addDependency : true
 
-        if (!dir) dir = getDefaultDir(project)
-        if (!username) username = CredentialsHelper.username(name)
-        if (!password) password = CredentialsHelper.password(name)
+        repoDir = new File(dir, name);
     }
 
     void check() {
@@ -44,12 +47,8 @@ abstract class VcsDependency {
     }
 
 
-    File getRepoDir() {
-        return new File(dir, name)
-    }
-
     File getProjectDir() {
-        return getRepoDir()
+        return repoDir
     }
 
     void checkEquals(VcsDependency d) {

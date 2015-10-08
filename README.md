@@ -48,18 +48,26 @@ In `build.gradle` add next method:
         svn name: '[Svn dependency name. Required]',
                 url: '[Svn repository url. Required]',
                 path: '[Path within repo url, i.e. /trunk/library/. Optional]',
-                rev: [Revision number. Required],
-                username: '[Username to access repo. Optional]',
-                password: '[Password. Optional]',
-                addDependency: [Whether to add project dependency or not. Optional, true by default]
+                rev: [Revision number or 'HEAD'. Required]
 
         git name: '[Git dependency name. Required]',
                 url: '[Git repository url. Required]',
                 path: '[Path within repo which should be added as dependency, i.e. /library/. Optional]',
-                commit: '[Commit id of any length. Required]',
-                username: '[Username to access repo. Optional]',
-                password: '[Password. Optional]',
-                addDependency: [Whether to add project dependency or not. Optional, true by default]
+                commit: '[Commit id of any length or 'master' to checkout HEAD. Required]'
+    }
+    
+Note, that using 'master' as git commit or 'HEAD' as svn revision is not recommended,
+use explicit commit / revision instead.
+
+Other optional parameters:
+
+    def vcs() {
+        xxx dir: '[Repository directory, overrides global vcs directory settings]',
+                username: '[Username to access repo]',
+                password: '[Password]',
+                includeProject: [Whether to include this repo as Gradle project, true by default],
+                addDependency: [Whether to add this project as dependency, true by default.
+                                Only works if 'includeProject' is true.]
     }
 
 If there were no username specified (like shown above), than plugin will look

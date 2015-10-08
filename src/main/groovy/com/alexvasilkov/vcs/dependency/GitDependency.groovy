@@ -5,8 +5,8 @@ import org.gradle.api.initialization.ProjectDescriptor
 
 class GitDependency extends VcsDependency {
 
-    String remote
-    String commit
+    final String remote
+    final String commit
 
     GitDependency(ProjectDescriptor project, Map map) {
         super(project, map)
@@ -22,8 +22,7 @@ class GitDependency extends VcsDependency {
 
     @Override
     File getProjectDir() {
-        File dir = getRepoDir()
-        return path == null ? dir : new File(dir, path)
+        return path == null ? repoDir : new File(repoDir, path)
     }
 
     @Override
