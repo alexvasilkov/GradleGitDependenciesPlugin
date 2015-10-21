@@ -14,8 +14,10 @@ abstract class VcsDependency {
     final File dir
     final String path
     final String username, password
+
     final boolean includeProject
     final boolean addDependency
+    final boolean keepUpdated
 
     final File repoDir
 
@@ -27,8 +29,10 @@ abstract class VcsDependency {
         path = map.path
         username = map.username ? map.username : CredentialsHelper.username(name)
         password = map.password ? map.password : CredentialsHelper.password(name)
+
         includeProject = map.includeProject instanceof Boolean ? map.includeProject : true
         addDependency = map.addDependency instanceof Boolean ? map.addDependency : true
+        keepUpdated = map.keepUpdated instanceof Boolean ? map.keepUpdated : true
 
         repoDir = new File(dir, name);
     }

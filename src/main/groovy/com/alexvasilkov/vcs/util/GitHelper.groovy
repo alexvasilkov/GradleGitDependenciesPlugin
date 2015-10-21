@@ -17,7 +17,7 @@ class GitHelper {
             String localCommit = git.head().id
             File dir = repo.repoDir
 
-            if (!localCommit.startsWith(commit)) {
+            if (repo.keepUpdated && !localCommit.startsWith(commit)) {
                 println "Git local version '${localCommit}' does not eqaul to version '${commit}'" +
                         " for '${dir}'"
 

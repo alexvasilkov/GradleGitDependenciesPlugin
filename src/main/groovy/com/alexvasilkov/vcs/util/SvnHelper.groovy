@@ -24,9 +24,11 @@ class SvnHelper {
             long rev = repo.rev
             File dir = repo.repoDir
 
-            boolean shouldUpdate = false
+            boolean shouldUpdate
 
-            if (repo.isHead) {
+            if (!repo.keepUpdated) {
+                shouldUpdate = false
+            } else if (repo.isHead) {
                 println "Svn updating ${localRev} to HEAD"
                 shouldUpdate = true
             } else if (localRev < rev) {
@@ -37,6 +39,8 @@ class SvnHelper {
                 println "Svn local revision ${localRev} is greater then target revision ${rev} for '${dir}'"
                 println "Svn reverting to revision ${rev} for '${dir}'"
                 shouldUpdate = true
+            } else {
+                shouldUpdate = false
             }
 
             if (shouldUpdate) {
