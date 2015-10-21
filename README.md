@@ -29,7 +29,7 @@ In `settings.gradle` file add next lines:
             mavenCentral()
         }
         dependencies {
-            classpath 'com.alexvasilkov:gradle-vcs-dependency:0.2.3'
+            classpath 'com.alexvasilkov:gradle-vcs-dependency:0.2.5'
         }
     }
 
