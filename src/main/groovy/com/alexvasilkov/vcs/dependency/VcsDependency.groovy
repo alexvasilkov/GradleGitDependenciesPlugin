@@ -8,11 +8,14 @@ import org.gradle.api.initialization.ProjectDescriptor
 abstract class VcsDependency {
 
     private static final String DEFAULT_DIR = 'libraries'
+    private static final String DEFAULT_AUTH_GROUP = 'VCS'
 
     final String name
     final String url
-    final File dir
     final String path
+    final File dir
+
+    final String authGroup
     final String username, password
 
     final boolean includeProject
@@ -24,11 +27,15 @@ abstract class VcsDependency {
     VcsDependency(ProjectDescriptor project, Map map) {
         name = map.name
         url = map.url
+        path = map.path
+
         File mapDir = map.dir instanceof String || map.dir instanceof File ? map.dir as File : null
         dir = (mapDir ? mapDir : getDefaultDir(project)).canonicalFile
-        path = map.path
-        username = map.username ? map.username : CredentialsHelper.username(name)
-        password = map.password ? map.password : CredentialsHelper.password(name)
+
+        authGroup = map.authGroup ? map.authGroup : DEFAULT_AUTH_GROUP
+
+        username = map.username ? map.username : CredentialsHelper.username(name, authGroup)
+        password = map.password ? map.password : CredentialsHelper.password(name, authGroup)
 
         includeProject = map.includeProject instanceof Boolean ? map.includeProject : true
         addDependency = map.addDependency instanceof Boolean ? map.addDependency : true
@@ -40,25 +47,31 @@ abstract class VcsDependency {
     void check() {
         if (!name) throw new GradleException("Vcs 'name' was not specified")
         if (!url) throw new GradleException("Vcs 'url' was not specified for ${name}")
-        if (dir.exists() && !dir.isDirectory())
+        if (dir.exists() && !dir.isDirectory()) {
             throw new GradleException("Vcs 'dir' is not a directory '${dir.path}' for ${name}")
-        if (!username)
+        }
+        if (!authGroup) {
+            throw new GradleException("Vcs 'authGroup' cannot be empty for ${name}")
+        }
+        if (!username) {
             throw new GradleException("Vcs 'username' is not specified for '${name}'\n" +
-                    "${CredentialsHelper.usernameHelp(name)}")
-        if (!password)
+                    "${CredentialsHelper.usernameHelp(name, authGroup)}")
+        }
+        if (!password) {
             throw new GradleException("Vcs 'password' is not specified for '${name}'\n" +
-                    "${CredentialsHelper.passwordHelp(name)}")
+                    "${CredentialsHelper.passwordHelp(name, authGroup)}")
+        }
     }
-
 
     File getProjectDir() {
         return repoDir
     }
 
     void checkEquals(VcsDependency d) {
-        if (d.name != name)
+        if (d.name != name) {
             throw new RuntimeException("Method checkEquals should be called only for dependencies" +
                     " with same name")
+        }
         if (d.url != url) throwEqualCheckFail('url', url, d.url)
         if (!Objects.equals(d.dir, dir)) throwEqualCheckFail('dir', dir.path, d.dir.path)
         if (d.path != path) throwEqualCheckFail('path', path, s.path)
@@ -78,5 +91,4 @@ abstract class VcsDependency {
         while (root.parent != null) root = root.parent
         return new File(root.projectDir, DEFAULT_DIR)
     }
-
 }

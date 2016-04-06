@@ -4,7 +4,6 @@ import org.gradle.api.invocation.Gradle
 
 class CredentialsHelper {
 
-    private static final DEFAULT_PREFIX = 'VCS'
     private static final USERNAME = '_USERNAME'
     private static final PASSWORD = '_PASSWORD'
     private static final GRADLE_FILE = 'gradle.properties'
@@ -14,29 +13,29 @@ class CredentialsHelper {
     private static File gradleUserHome
     private static Properties vcsProps, gradleProps, gradleHomeProps
 
-    static String username(String projectName) {
-        return get(projectName, USERNAME)
+    static String username(String projectName, String authGroup) {
+        return get(projectName, authGroup, USERNAME)
     }
 
-    static String password(String projectName) {
-        return get(projectName, PASSWORD)
+    static String password(String projectName, String authGroup) {
+        return get(projectName, authGroup, PASSWORD)
     }
 
-    static String usernameHelp(String projectName) {
-        return help(projectName, USERNAME)
+    static String usernameHelp(String projectName, String authGroup) {
+        return help(projectName, authGroup, USERNAME)
     }
 
-    static String passwordHelp(String projectName) {
-        return help(projectName, PASSWORD)
+    static String passwordHelp(String projectName, String authGroup) {
+        return help(projectName, authGroup, PASSWORD)
     }
 
-    private static String get(String projectName, String suffix) {
+    private static String get(String projectName, String authGroup, String suffix) {
         if (!projectName) return null
 
         String value = get(projectName.toUpperCase() + suffix)
         if (value) return value
 
-        return get(DEFAULT_PREFIX + suffix)
+        return get(authGroup + suffix)
     }
 
     private static String get(String propName) {
@@ -58,9 +57,9 @@ class CredentialsHelper {
         return System.getenv().get(propName)
     }
 
-    private static String help(String projectName, String suffix) {
+    private static String help(String projectName, String authGroup, String suffix) {
         return "You should provide either ${projectName.toUpperCase()}${suffix}" +
-                " or ${DEFAULT_PREFIX}${suffix} in either ${VCS_FILE}, ${GRADLE_FILE}" +
+                " or ${authGroup}${suffix} in either ${VCS_FILE}, ${GRADLE_FILE}" +
                 " or ${gradleUserHome.absolutePath}/${GRADLE_FILE} files" +
                 " or as environment variable"
     }
@@ -88,5 +87,4 @@ class CredentialsHelper {
             gradleHomeFile.withInputStream { stream -> gradleHomeProps.load(stream) }
         }
     }
-
 }

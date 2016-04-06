@@ -62,26 +62,28 @@ use explicit commit / revision instead.
 Other optional parameters:
 
     def vcs() {
-        xxx dir: '[Repository directory, overrides global vcs directory settings]',
-            username: '[Username to access repo]',
-            password: '[Password]',
-            includeProject: [Whether to include this repo as Gradle project, true by default],
-            addDependency: [Whether to add this project as dependency, true by default.
-                            Only works if 'includeProject' is true.],
-            keepUpdated: [Whether to update this repo automatically or not, true by default]
+        xxx dir: '[Repository directory, overrides global vcs directory settings. Optional.]',
+            username: '[Username to access repo. Optional.]',
+            password: '[Password. Optional.]',
+            authGroup: '[Group name to share same access credentials. Optional, default is VCS.]',
+            includeProject: [Whether to include this repo as Gradle project. Optional, true by default.],
+            addDependency: [Whether to add this project as dependency.
+                            Only works if 'includeProject' is true. Optional, true by default.],
+            keepUpdated: [Whether to update this repo automatically or not. Optional, true by default.]
     }
 
-If there were no username specified (like shown above), than plugin will look
-first for property named `[name in upper case]_USERNAME` and than for general property
-`VCS_USERNAME` in next places:
+If `username` property is not specified, plugin will look first for property named
+`[name in upper case]_USERNAME` and than for property `[authGroup]_USERNAME`
+(`VCS_USERNAME` by default) in next places:
 
 1. `vcs.properties` in the root directory of the project
 1. `gradle.properties` in the root directory of the project
 1. `gradle.properties` in `[USER_HOME]/.gradle/` directory
 1. Environment variables
 
-For password plugin will look first for property named `[name in upper case]_PASSWORD`
-and than for general property `VCS_PASSWORD` in same places.
+If `password` property is not specified, plugin will look first for property named
+`[name in upper case]_PASSWORD` and than for property `[authGroup]_PASSWORD`
+(`VCS_PASSWORD` by default) in same places.
 
 I.e. if dependency name is `ProjectName` than plugin will first look for `PROJECTNAME_USERNAME`
 and `PROJECTNAME_PASSWORD` properties.
