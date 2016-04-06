@@ -5,6 +5,7 @@ import org.ajoberstar.grgit.Credentials
 import org.ajoberstar.grgit.Grgit
 import org.ajoberstar.grgit.Status
 import org.eclipse.jgit.errors.RepositoryNotFoundException
+import org.eclipse.jgit.lib.Constants
 import org.gradle.api.GradleException
 
 class GitHelper {
@@ -13,20 +14,26 @@ class GitHelper {
         Grgit git = openGit(repo)
 
         if (git != null) {
-            String commit = repo.commit
-            String localCommit = git.head().id
-            File dir = repo.repoDir
+            String remoteUrl = getRemoteUrl(git)
 
-            if (repo.keepUpdated && !localCommit.startsWith(commit)) {
-                println "Git local version '${localCommit}' does not eqaul to version '${commit}'" +
-                        " for '${dir}'"
+            if (remoteUrl == null || remoteUrl.equals(repo.url)) {
+                throw new GradleException("Git cannot update from ${remoteUrl} to ${repo.url}.\n" +
+                        "Delete directory '${repo.repoDir}' and try again.")
+            }
+
+            String targetCommit = repo.commit
+            String localCommit = git.head().id
+
+            if (repo.keepUpdated && !localCommit.startsWith(targetCommit)) {
+                println "Git local version '${localCommit}' is not eqaul to target " +
+                        "'${targetCommit}' for '${repo.repoDir}'"
 
                 if (hasLocalChanges(git)) {
-                    throw new GradleException("Git repo cannot be updated to '${commit}', " +
-                            "'${dir}' contains local changes.\n" +
+                    throw new GradleException("Git repo cannot be updated to '${targetCommit}', " +
+                            "'${repo.repoDir}' contains local changes.\n" +
                             "Commit or revert all changes manually.")
                 } else {
-                    println "Git updating to version '${commit}' for '${dir}'"
+                    println "Git updating to version '${targetCommit}' for '${repo.repoDir}'"
                     update(git, repo)
                 }
             }
@@ -38,9 +45,14 @@ class GitHelper {
     private static Grgit openGit(GitDependency repo) {
         try {
             return Grgit.open(dir: repo.repoDir, creds: getCreds(repo))
-        } catch (RepositoryNotFoundException e) {
+        } catch (RepositoryNotFoundException ignored) {
             return null
         }
+    }
+
+    private static String getRemoteUrl(Grgit git) {
+        return git.repository.jgit.repository.config
+                .getString('remote', Constants.DEFAULT_REMOTE_NAME, 'url')
     }
 
     private static boolean hasLocalChanges(Grgit git) {
@@ -72,5 +84,4 @@ class GitHelper {
     private static Credentials getCreds(GitDependency repo) {
         return new Credentials(repo.username, repo.password)
     }
-
 }
