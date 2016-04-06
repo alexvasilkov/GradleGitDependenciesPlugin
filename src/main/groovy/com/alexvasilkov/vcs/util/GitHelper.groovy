@@ -16,7 +16,7 @@ class GitHelper {
         if (git != null) {
             String remoteUrl = getRemoteUrl(git)
 
-            if (remoteUrl == null || remoteUrl.equals(repo.url)) {
+            if (remoteUrl == null || !remoteUrl.equals(repo.url)) {
                 throw new GradleException("Git cannot update from ${remoteUrl} to ${repo.url}.\n" +
                         "Delete directory '${repo.repoDir}' and try again.")
             }
