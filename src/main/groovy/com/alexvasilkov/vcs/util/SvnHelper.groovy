@@ -20,8 +20,8 @@ class SvnHelper {
         SVNClientManager client = getClient(repo)
 
         if (exists) {
-            SVNURL localUrl = getRepoUrl(client, repo)
-            SVNURL targetUrl = getTargetUrl(repo)
+            String localUrl = getRepoUrl(client, repo)
+            String targetUrl = getTargetUrl(repo).toString()
 
             if (!localUrl.equals(targetUrl)) {
                 throw new GradleException("Svn cannot update from ${localUrl} to ${targetUrl}.\n" +
@@ -91,8 +91,9 @@ class SvnHelper {
         return client.statusClient.doStatus(repo.repoDir, false).revision
     }
 
-    private static SVNURL getRepoUrl(SVNClientManager client, SvnDependency repo) {
-        return client.statusClient.doStatus(repo.repoDir, false).repositoryRootURL
+    private static String getRepoUrl(SVNClientManager client, SvnDependency repo) {
+        SVNStatus status = client.statusClient.doStatus(repo.repoDir, false);
+        return status.repositoryRootURL.toString() + '/' + status.repositoryRelativePath.toString()
     }
 
     private static boolean hasLocalChanges(SVNClientManager client, SvnDependency repo) {
