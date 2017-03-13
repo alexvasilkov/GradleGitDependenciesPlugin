@@ -10,7 +10,6 @@ import com.alexvasilkov.vcs.util.SvnHelper
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.initialization.Settings
-import org.gradle.initialization.BaseSettings
 import org.gradle.initialization.DefaultProjectDescriptor
 
 class VcsSettingsPlugin implements Plugin<Settings> {
@@ -24,23 +23,22 @@ class VcsSettingsPlugin implements Plugin<Settings> {
 
         CredentialsHelper.init(settings.gradle)
 
-        settings.gradle.settingsEvaluated { BaseSettings s ->
-            resolveDependenciesRecursively(s, s.projectDescriptorRegistry.allProjects)
-            cleanup(s)
+        settings.gradle.settingsEvaluated { Settings sett ->
+            resolveDependenciesRecursively(sett, sett.projectDescriptorRegistry.allProjects)
+            cleanup(sett)
         }
 
         // Adding created vcs projects dependencies for each project
-        settings.gradle.afterProject { Project p ->
-            dependencies.get(p.name).each { VcsDependency d ->
-                if (d.includeProject && d.addDependency) {
-                    p.dependencies.add('compile', p.project(projectName(d)))
+        settings.gradle.afterProject { Project project ->
+            dependencies.get(project.name).each { VcsDependency dep ->
+                if (dep.includeProject && dep.addDependency) {
+                    project.dependencies.add('compile', project.project(projectName(dep)))
                 }
             }
         }
     }
 
-
-    void resolveDependenciesRecursively(BaseSettings s, Set<DefaultProjectDescriptor> projects) {
+    void resolveDependenciesRecursively(Settings settings, Set<DefaultProjectDescriptor> projects) {
         Set<DefaultProjectDescriptor> newProjects = new HashSet<>()
 
         // Building vcs dependencies list by invoking build.gradle#vcs() method for each project
@@ -74,26 +72,24 @@ class VcsSettingsPlugin implements Plugin<Settings> {
                         }
 
                         if (d.includeProject) {
-                            s.include(projectName(d))
-                            DefaultProjectDescriptor newProject = s.project(projectName(d))
+                            settings.include(projectName(d))
+                            DefaultProjectDescriptor newProject = settings.project(projectName(d))
                             newProject.projectDir = d.projectDir
                             newProjects.add(newProject)
                         }
                     }
                 }
             }
-
         }
 
         // If we have new projects we should process them too
-        if (newProjects) resolveDependenciesRecursively(s, newProjects)
+        if (newProjects) resolveDependenciesRecursively(settings, newProjects)
     }
 
-
-    private void cleanup(BaseSettings s) {
+    private void cleanup(Settings settings) {
         if (VcsProperties.instance.cleanup) {
             // Cleaning up unused directories and files
-            File libsDir = VcsDependency.getDefaultDir(s.defaultProject)
+            File libsDir = VcsDependency.getDefaultDir(settings.defaultProject)
             libsDir.listFiles().each { File dir ->
                 boolean found = false
                 dependencies.all().each { VcsDependency d ->
@@ -105,9 +101,7 @@ class VcsSettingsPlugin implements Plugin<Settings> {
         }
     }
 
-
-    private static String projectName(VcsDependency d) {
-        return ":${d.name}"
+    private static String projectName(VcsDependency dep) {
+        return ":${dep.name}"
     }
-
 }
