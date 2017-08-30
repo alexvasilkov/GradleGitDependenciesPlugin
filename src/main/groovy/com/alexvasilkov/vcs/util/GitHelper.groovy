@@ -22,9 +22,9 @@ class GitHelper {
             }
 
             String targetCommit = repo.commit
-            String localCommit = git.head().id
 
-            if (repo.keepUpdated && !localCommit.startsWith(targetCommit)) {
+            if (repo.keepUpdated && !isLocalCommit(git, targetCommit)) {
+                String localCommit = git.head().id
                 println "Git local version '${localCommit}' is not eqaul to target " +
                         "'${targetCommit}' for '${repo.repoDir}'"
 
@@ -53,6 +53,14 @@ class GitHelper {
     private static String getRemoteUrl(Grgit git) {
         return git.repository.jgit.repository.config
                 .getString('remote', Constants.DEFAULT_REMOTE_NAME, 'url')
+    }
+
+    private static boolean isLocalCommit(Grgit git, String targetId) {
+        def head = git.head()
+        // Checking if local commit is equal to (starts with) requested one.
+        // If not then we should check if there are tags with target name pointing to current head.
+        return head.id.startsWith(targetId) ||
+                git.tag.list().find { it.commit == head && it.name == targetId }
     }
 
     private static boolean hasLocalChanges(Grgit git) {
