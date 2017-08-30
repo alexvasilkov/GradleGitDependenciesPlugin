@@ -29,7 +29,7 @@ In `settings.gradle` file add next lines:
             mavenCentral()
         }
         dependencies {
-            classpath 'com.alexvasilkov:gradle-vcs-dependency:1.0.0'
+            classpath 'com.alexvasilkov:gradle-vcs-dependency:1.0.1'
         }
     }
 
@@ -53,7 +53,7 @@ In `build.gradle` add next method:
         git name: '[Git dependency name. Required]',
             url: '[Git repository url. Required]',
             path: '[Path within repo which should be added as dependency, i.e. /library/. Optional]',
-            commit: '[Commit id of any length or 'master' to checkout HEAD. Required]'
+            commit: '[Commit id of any length, tag name or 'master' to checkout HEAD. Required]'
     }
     
 Note, that using 'master' as git commit or 'HEAD' as svn revision is not recommended,
