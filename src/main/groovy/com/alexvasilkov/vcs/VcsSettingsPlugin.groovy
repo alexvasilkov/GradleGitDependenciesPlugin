@@ -32,7 +32,7 @@ class VcsSettingsPlugin implements Plugin<Settings> {
         settings.gradle.afterProject { Project project ->
             dependencies.get(project.name).each { VcsDependency dep ->
                 if (dep.includeProject && dep.addDependency) {
-                    project.dependencies.add('compile', project.project(projectName(dep)))
+                    project.dependencies.add(dep.configName, project.project(projectName(dep)))
                 }
             }
         }

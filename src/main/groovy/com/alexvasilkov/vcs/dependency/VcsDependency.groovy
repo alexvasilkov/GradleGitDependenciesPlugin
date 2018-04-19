@@ -9,6 +9,7 @@ abstract class VcsDependency {
 
     private static final String DEFAULT_DIR = 'libraries'
     private static final String DEFAULT_AUTH_GROUP = 'VCS'
+    private static final String DEFAULT_CONFIG_NAME = 'implementation'
 
     final String name
     final String url
@@ -21,6 +22,7 @@ abstract class VcsDependency {
     final boolean includeProject
     final boolean addDependency
     final boolean keepUpdated
+    final String configName
 
     final File repoDir
 
@@ -40,8 +42,9 @@ abstract class VcsDependency {
         includeProject = map.includeProject instanceof Boolean ? map.includeProject : true
         addDependency = map.addDependency instanceof Boolean ? map.addDependency : true
         keepUpdated = map.keepUpdated instanceof Boolean ? map.keepUpdated : true
+        configName = map.configName ? map.configName : DEFAULT_CONFIG_NAME
 
-        repoDir = new File(dir, name);
+        repoDir = new File(dir, name)
     }
 
     void check() {
@@ -51,6 +54,9 @@ abstract class VcsDependency {
             throw new GradleException("Vcs 'dir' is not a directory '${dir.path}' for ${name}")
         }
         if (!authGroup) {
+            throw new GradleException("Vcs 'authGroup' cannot be empty for ${name}")
+        }
+        if (!configName) {
             throw new GradleException("Vcs 'authGroup' cannot be empty for ${name}")
         }
         if (!username) {
@@ -69,8 +75,8 @@ abstract class VcsDependency {
 
     void checkEquals(VcsDependency d) {
         if (d.name != name) {
-            throw new RuntimeException("Method checkEquals should be called only for dependencies" +
-                    " with same name")
+            throw new RuntimeException(
+                    "Method checkEquals should be called only for dependencies with same name")
         }
         if (d.url != url) throwEqualCheckFail('url', url, d.url)
         if (!Objects.equals(d.dir, dir)) throwEqualCheckFail('dir', dir.path, d.dir.path)
