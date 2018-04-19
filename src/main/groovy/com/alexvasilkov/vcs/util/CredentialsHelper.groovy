@@ -29,6 +29,13 @@ class CredentialsHelper {
         return help(projectName, authGroup, PASSWORD)
     }
 
+    private static String help(String projectName, String authGroup, String suffix) {
+        return "You should provide either ${projectName.toUpperCase()}${suffix}" +
+                " or ${authGroup}${suffix} in either ${VCS_FILE}, ${GRADLE_FILE}" +
+                " or ${gradleUserHome.absolutePath}/${GRADLE_FILE} files" +
+                " or as environment variable."
+    }
+
     private static String get(String projectName, String authGroup, String suffix) {
         if (!projectName) return null
 
@@ -57,14 +64,7 @@ class CredentialsHelper {
         return System.getenv().get(propName)
     }
 
-    private static String help(String projectName, String authGroup, String suffix) {
-        return "You should provide either ${projectName.toUpperCase()}${suffix}" +
-                " or ${authGroup}${suffix} in either ${VCS_FILE}, ${GRADLE_FILE}" +
-                " or ${gradleUserHome.absolutePath}/${GRADLE_FILE} files" +
-                " or as environment variable"
-    }
-
-    public static void init(Gradle gradle) {
+    static void init(Gradle gradle) {
         if (isInitialized) return
         isInitialized = true
 

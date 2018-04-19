@@ -70,7 +70,7 @@ class SvnHelper {
     private static SVNClientManager getClient(SvnDependency repo) {
         ISVNOptions options = SVNWCUtil.createDefaultOptions(true)
         ISVNAuthenticationManager auth =
-                new BasicAuthenticationManager(repo.username, repo.password)
+                repo.noAuth ? null : new BasicAuthenticationManager(repo.username, repo.password)
         return SVNClientManager.newInstance(options, auth)
     }
 
@@ -92,7 +92,7 @@ class SvnHelper {
     }
 
     private static String getRepoUrl(SVNClientManager client, SvnDependency repo) {
-        SVNStatus status = client.statusClient.doStatus(repo.repoDir, false);
+        SVNStatus status = client.statusClient.doStatus(repo.repoDir, false)
         return status.repositoryRootURL.toString() + '/' + status.repositoryRelativePath.toString()
     }
 

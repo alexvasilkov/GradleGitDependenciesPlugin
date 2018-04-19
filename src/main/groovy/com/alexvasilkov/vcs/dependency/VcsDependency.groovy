@@ -16,6 +16,7 @@ abstract class VcsDependency {
     final String path
     final File dir
 
+    final boolean noAuth
     final String authGroup
     final String username, password
 
@@ -34,10 +35,13 @@ abstract class VcsDependency {
         File mapDir = map.dir instanceof String || map.dir instanceof File ? map.dir as File : null
         dir = (mapDir ? mapDir : getDefaultDir(project)).canonicalFile
 
+        noAuth = map.noAuth instanceof Boolean ? map.noAuth : false
         authGroup = map.authGroup ? map.authGroup : DEFAULT_AUTH_GROUP
 
-        username = map.username ? map.username : CredentialsHelper.username(name, authGroup)
-        password = map.password ? map.password : CredentialsHelper.password(name, authGroup)
+        username = noAuth ? null
+                : (map.username ? map.username : CredentialsHelper.username(name, authGroup))
+        password = noAuth ? null
+                : (map.password ? map.password : CredentialsHelper.password(name, authGroup))
 
         includeProject = map.includeProject instanceof Boolean ? map.includeProject : true
         addDependency = map.addDependency instanceof Boolean ? map.addDependency : true
@@ -59,12 +63,12 @@ abstract class VcsDependency {
         if (!configName) {
             throw new GradleException("Vcs 'authGroup' cannot be empty for ${name}")
         }
-        if (!username) {
-            throw new GradleException("Vcs 'username' is not specified for '${name}'\n" +
+        if (!noAuth && !username) {
+            throw new GradleException("Vcs 'username' is not specified for '${name}'.\n" +
                     "${CredentialsHelper.usernameHelp(name, authGroup)}")
         }
-        if (!password) {
-            throw new GradleException("Vcs 'password' is not specified for '${name}'\n" +
+        if (!noAuth && !password) {
+            throw new GradleException("Vcs 'password' is not specified for '${name}'.\n" +
                     "${CredentialsHelper.passwordHelp(name, authGroup)}")
         }
     }

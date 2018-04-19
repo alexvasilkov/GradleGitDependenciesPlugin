@@ -90,6 +90,6 @@ class GitHelper {
     }
 
     private static Credentials getCreds(GitDependency repo) {
-        return new Credentials(repo.username, repo.password)
+        return repo.noAuth ? null : new Credentials(repo.username, repo.password)
     }
 }
