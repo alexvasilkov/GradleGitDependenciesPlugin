@@ -14,7 +14,7 @@ In `settings.gradle` file add the following lines:
             jcenter()
         }
         dependencies {
-            classpath 'com.alexvasilkov:gradle-vcs-dependency:1.0.1'
+            classpath 'com.alexvasilkov:gradle-vcs-dependency:1.1.0'
         }
     }
 
