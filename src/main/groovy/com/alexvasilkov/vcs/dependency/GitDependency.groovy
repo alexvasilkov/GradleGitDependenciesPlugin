@@ -1,15 +1,14 @@
 package com.alexvasilkov.vcs.dependency
 
 import org.gradle.api.GradleException
-import org.gradle.api.initialization.ProjectDescriptor
 
 class GitDependency extends VcsDependency {
 
     final String remote
     final String commit
 
-    GitDependency(ProjectDescriptor project, Map map) {
-        super(project, map)
+    GitDependency(Map map) {
+        super(map)
         remote = map.remote
         commit = map.commit
     }
@@ -29,10 +28,9 @@ class GitDependency extends VcsDependency {
     void checkEquals(VcsDependency d) {
         super.checkEquals(d)
 
-        GitDependency g = (GitDependency) d;
+        GitDependency g = (GitDependency) d
 
         if (g.remote != remote) throwEqualCheckFail('remote', remote, g.remote)
         if (g.commit != commit) throwEqualCheckFail('commit', commit, g.commit)
     }
-
 }

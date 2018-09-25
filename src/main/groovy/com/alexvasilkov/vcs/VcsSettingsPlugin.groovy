@@ -24,8 +24,9 @@ class VcsSettingsPlugin implements Plugin<Settings> {
         CredentialsHelper.init(settings.gradle)
 
         settings.gradle.settingsEvaluated { Settings sett ->
+            VcsProperties.instance.resolve(sett)
             resolveDependenciesRecursively(sett, sett.projectDescriptorRegistry.allProjects)
-            cleanup(sett)
+            cleanup()
         }
 
         // Adding created vcs projects dependencies for each project
@@ -51,12 +52,12 @@ class VcsSettingsPlugin implements Plugin<Settings> {
                 if (script.metaClass.respondsTo(script, 'vcs')) {
                     // Adding git method
                     script.binding.setVariable('git', { Map params ->
-                        dependencies.add(project.name, new GitDependency(project, params))
+                        dependencies.add(project.name, new GitDependency(params))
                     })
 
                     // Adding svn method
                     script.binding.setVariable('svn', { Map params ->
-                        dependencies.add(project.name, new SvnDependency(project, params))
+                        dependencies.add(project.name, new SvnDependency(params))
                     })
 
                     // Executing configuration method
@@ -86,10 +87,10 @@ class VcsSettingsPlugin implements Plugin<Settings> {
         if (newProjects) resolveDependenciesRecursively(settings, newProjects)
     }
 
-    private void cleanup(Settings settings) {
+    private void cleanup() {
         if (VcsProperties.instance.cleanup) {
             // Cleaning up unused directories and files
-            File libsDir = VcsDependency.getDefaultDir(settings.defaultProject)
+            File libsDir = VcsProperties.instance.dir
             libsDir.listFiles().each { File dir ->
                 boolean found = false
                 dependencies.all().each { VcsDependency d ->

@@ -3,11 +3,9 @@ package com.alexvasilkov.vcs.dependency
 import com.alexvasilkov.vcs.VcsProperties
 import com.alexvasilkov.vcs.util.CredentialsHelper
 import org.gradle.api.GradleException
-import org.gradle.api.initialization.ProjectDescriptor
 
 abstract class VcsDependency {
 
-    private static final String DEFAULT_DIR = 'libraries'
     private static final String DEFAULT_AUTH_GROUP = 'VCS'
     private static final String DEFAULT_CONFIG_NAME = 'implementation'
 
@@ -27,13 +25,13 @@ abstract class VcsDependency {
 
     final File repoDir
 
-    VcsDependency(ProjectDescriptor project, Map map) {
+    VcsDependency(Map map) {
         name = map.name
         url = map.url
         path = map.path
 
         File mapDir = map.dir instanceof String || map.dir instanceof File ? map.dir as File : null
-        dir = (mapDir ? mapDir : getDefaultDir(project)).canonicalFile
+        dir = (mapDir ? mapDir : VcsProperties.instance.dir).canonicalFile
 
         noAuth = map.noAuth instanceof Boolean ? map.noAuth : false
         authGroup = map.authGroup ? map.authGroup : DEFAULT_AUTH_GROUP
@@ -92,13 +90,5 @@ abstract class VcsDependency {
     protected void throwEqualCheckFail(String paramName, Object val1, Object val2) {
         throw new GradleException("Found 2 incompatible dependencies '${name}' with different" +
                 " '${paramName}' values: '${val1}' and '${val2}'")
-    }
-
-    static File getDefaultDir(ProjectDescriptor project) {
-        if (VcsProperties.instance.dir) return VcsProperties.instance.dir as File
-
-        ProjectDescriptor root = project
-        while (root.parent != null) root = root.parent
-        return new File(root.projectDir, DEFAULT_DIR)
     }
 }
