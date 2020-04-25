@@ -1,0 +1,78 @@
+//    id 'java-library'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+group = 'com.alexvasilkov'
+version = '2.0.0'
+
+task pluginGroovydoc(type: Groovydoc) {
+    source = sourceSets.main.groovy.srcDirs
+    classpath = sourceSets.main.compileClasspath
+}
+
+task pluginGroovydocJar(type: Jar, dependsOn: pluginGroovydoc) {
+    archiveClassifier.set('javadoc') // Required to be named 'javadoc' for Maven Central
+    from pluginGroovydoc.destinationDir
+}
+
+task pluginSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allGroovy
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact source: pluginGroovydocJar, classifier: 'javadoc'
+            artifact source: pluginSourcesJar, classifier: 'sources'
+
+            artifactId = 'gradle-git-dependencies'
+            pom {
+                name = 'GradleGitDependenciesPlugin'
+                packaging = 'jar'
+                description = 'Gradle plugin to add external git repos as project dependencies'
+                url = 'https://github.com/alexvasilkov/GradleGitDependenciesPlugin'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'alexvasilkov'
+                        name = 'Alex Vasilkov'
+                    }
+                }
+                scm {
+                    connection = 'scm:git@github.com/alexvasilkov/GradleGitDependenciesPlugin.git'
+                    developerConnection =
+                            'scm:git@github.com:alexvasilkov/GradleGitDependenciesPlugin.git'
+                    url = 'https://github.com/alexvasilkov/GradleGitDependenciesPlugin'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            url = version.contains('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = findProperty('maven.alexvasilkov.username')
+                password = findProperty('maven.alexvasilkov.password')
+            }
+        }
+    }
+}
+
+signing {
+    required { gradle.taskGraph.hasTask('publish') }
+
+    sign publishing.publications.mavenJava
+
+    // We need to re-map singing properties to be able to mix properties for different projects
+    project.ext.'signing.keyId' = findProperty('signing.alexvasilkov.keyId')
+    project.ext.'signing.password' = findProperty('signing.alexvasilkov.password')
+}
