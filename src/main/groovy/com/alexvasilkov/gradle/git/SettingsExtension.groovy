@@ -8,6 +8,7 @@ class SettingsExtension {
     final File rootDir
 
     File dir
+    String defaultAuthGroup
     boolean cleanup
     boolean cleanupIdeaModules
 
@@ -16,6 +17,7 @@ class SettingsExtension {
         this.rootDir = settings.rootDir
         // Setting default values:
         this.dir = new File(settings.rootDir, 'libs')
+        this.defaultAuthGroup = null
         this.cleanup = true
         this.cleanupIdeaModules = true
     }
@@ -30,6 +32,10 @@ class SettingsExtension {
         void dir(def dir) {
             if (!dir) throw new NullPointerException("Git dependency: 'dir' cannot be null")
             SettingsExtension.this.dir = dir as File
+        }
+
+        void defaultAuthGroup(String authGroup) {
+            SettingsExtension.this.defaultAuthGroup = authGroup
         }
 
         void cleanup(boolean cleanup) {

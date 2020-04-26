@@ -28,8 +28,8 @@ class GitDependency {
         commit = builder.commit ?: 'master'
         projectPath = builder.projectPath
         dir = builder.dir ?: (name != null ? new File(props.dir, name) : null)
-        authGroup = builder.authGroup
-        needsAuth = builder.authGroup || builder.username || builder.password
+        authGroup = builder.authGroup ?: props.defaultAuthGroup
+        needsAuth = authGroup || builder.username || builder.password
         username = needsAuth ? (builder.username ?: credentials.username(authGroup)) : null
         password = needsAuth ? (builder.password ?: credentials.password(authGroup)) : null
         keepUpdated = builder.keepUpdated ?: true

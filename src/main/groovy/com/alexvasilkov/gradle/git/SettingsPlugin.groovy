@@ -27,7 +27,7 @@ class SettingsPlugin implements Plugin<Settings> {
             GitDependency dep = buildDependency(settings, null, url, closure)
             dependencies.add(null, dep)
         })
-        this.credentials = new Credentials(settings.gradle)
+        this.credentials = new Credentials(settings.gradle.gradleUserHomeDir)
 
         // Adding configuration method to collect plugin settings
         settings.metaClass."$EXTENSION_NAME" = props.&apply

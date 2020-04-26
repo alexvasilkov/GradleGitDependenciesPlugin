@@ -12,8 +12,8 @@ class Credentials {
     private Properties gradleUserProps
     private Properties localProps
 
-    Credentials(Gradle gradle) {
-        userDir = gradle.gradleUserHomeDir
+    Credentials(File gradleUserHomeDir) {
+        userDir = gradleUserHomeDir
 
         File gradleFile = new File('gradle.properties')
         if (gradleFile.exists()) {

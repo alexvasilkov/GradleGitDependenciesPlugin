@@ -14,7 +14,7 @@ In `settings.gradle` file add the following lines:
             jcenter()
         }
         dependencies {
-            classpath 'com.alexvasilkov:gradle-git-dependencies:2.0.0'
+            classpath 'com.alexvasilkov:gradle-git-dependencies:2.0.1'
         }
     }
 
@@ -25,6 +25,7 @@ Optionally you can provide settings next in `settings.gradle`:
     git {
         dir 'libs' // Directory in which to store git repositories, 'libs' by default
         cleanup true // Whether to cleanup unused dirs inside 'libs' dir, true by default
+        defaultAuthGroup 'group name' // Default auth group to be used for all repos. See `Credentials` section below.
     }
 
 ### Usage ###
@@ -120,6 +121,8 @@ If `authGroup` is provided then the plugin will search for `git.[authGroup].user
 * ~/.gradle/gradle.properties
 * environment variables, in uppercase and with `_` instead of `.`, e.g. `GIT_GITHUB_USERNAME`
 
+If `defaultAuthGroup` is provided in `settings.gradle` then it will be used for all repos
+unless `authGroup` is explicitly set.
 
 ### Migration from v1.x.x ###
 
