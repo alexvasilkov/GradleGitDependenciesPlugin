@@ -1,9 +1,5 @@
-//    id 'java-library'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
-
-group = 'com.alexvasilkov'
-version = '2.0.0'
 
 task pluginGroovydoc(type: Groovydoc) {
     source = sourceSets.main.groovy.srcDirs
@@ -27,12 +23,15 @@ publishing {
             artifact source: pluginGroovydocJar, classifier: 'javadoc'
             artifact source: pluginSourcesJar, classifier: 'sources'
 
-            artifactId = 'gradle-git-dependencies'
+            groupId = project.ext.group
+            artifactId = project.ext.artifactId
+            version = project.ext.version
+
             pom {
-                name = 'GradleGitDependenciesPlugin'
+                name = project.ext.name
+                description = project.ext.description
                 packaging = 'jar'
-                description = 'Gradle plugin to add external git repos as project dependencies'
-                url = 'https://github.com/alexvasilkov/GradleGitDependenciesPlugin'
+                url = project.ext.github
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
@@ -46,10 +45,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git@github.com/alexvasilkov/GradleGitDependenciesPlugin.git'
-                    developerConnection =
-                            'scm:git@github.com:alexvasilkov/GradleGitDependenciesPlugin.git'
-                    url = 'https://github.com/alexvasilkov/GradleGitDependenciesPlugin'
+                    connection = project.ext.githubScm
+                    developerConnection = project.ext.githubScm
+                    url = project.ext.github
                 }
             }
         }
@@ -58,7 +56,7 @@ publishing {
         maven {
             def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
             def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-            url = version.contains('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            url = project.ext.version.contains('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
             credentials {
                 username = findProperty('maven.alexvasilkov.username')
                 password = findProperty('maven.alexvasilkov.password')

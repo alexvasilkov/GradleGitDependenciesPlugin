@@ -1,4 +1,16 @@
+buildscript {
+    apply from: 'gradle/scripts/gradle_publish_buildscript.gradle', to: buildscript
+}
+
 apply plugin: 'groovy'
+
+ext.group = 'com.alexvasilkov'
+ext.artifactId = 'gradle-git-dependencies'
+ext.version = '2.0.0'
+ext.name = 'Git Dependencies plugin'
+ext.description = 'Gradle plugin to add external git repos as project dependencies'
+ext.github = 'https://github.com/alexvasilkov/GradleGitDependenciesPlugin'
+ext.githubScm = 'scm:git@github.com:alexvasilkov/GradleGitDependenciesPlugin.git'
 
 repositories {
     jcenter()
@@ -7,8 +19,12 @@ repositories {
 dependencies {
     compile gradleApi()
     compile localGroovy()
+
     compile 'org.ajoberstar.grgit:grgit-core:4.0.2'
 }
 
-// Build & upload: './gradlew clean build publish'
-apply from: "$rootDir/gradle/scripts/publish.gradle"
+// Build & upload to maven: './gradlew clean build publish'
+apply from: "$rootDir/gradle/scripts/maven_publish.gradle"
+
+// Build & upload to gradle: './gradlew clean build publishPlugins'
+apply from: "$rootDir/gradle/scripts/gradle_publish.gradle"

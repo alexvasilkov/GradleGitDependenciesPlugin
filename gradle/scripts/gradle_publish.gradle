@@ -1,0 +1,22 @@
+apply plugin: 'com.gradle.plugin-publish'
+
+pluginBundle {
+    website = project.ext.github
+    vcsUrl = project.ext.github
+
+    plugins {
+        gitDependencies {
+            id = 'com.alexvasilkov.git-dependencies'
+            version = project.ext.version
+            displayName = project.ext.name
+            description = project.ext.description
+            tags = ['git', 'dependency']
+        }
+    }
+
+    mavenCoordinates {
+        groupId = project.ext.group
+        artifactId = project.ext.artifactId
+        version = project.ext.version
+    }
+}
