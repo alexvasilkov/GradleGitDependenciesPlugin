@@ -9,35 +9,51 @@ Gradle plugin to add external git repositories as dependencies.
 
 In `settings.gradle` file add the following lines:
 
-    buildscript {
-        repositories {
-            jcenter()
-        }
-        dependencies {
-            classpath 'com.alexvasilkov:gradle-git-dependencies:2.0.1'
-        }
-    }
+* If using Gradle 6.x.x
 
-    apply plugin: 'com.alexvasilkov.git-dependencies'
+```
+plugins {
+    id 'com.alexvasilkov.git-dependencies' version '2.0.1'
+}
+```
+
+* If using older Gradle version
+
+```
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.alexvasilkov:gradle-git-dependencies:2.0.1'
+    }
+}
+
+apply plugin: 'com.alexvasilkov.git-dependencies'
+```
 
 Optionally you can provide settings next in `settings.gradle`:
 
-    git {
-        dir 'libs' // Directory in which to store git repositories, 'libs' by default
-        cleanup true // Whether to cleanup unused dirs inside 'libs' dir, true by default
-        defaultAuthGroup 'group name' // Default auth group to be used for all repos. See `Credentials` section below.
-    }
+```
+git {
+    dir 'libs' // Directory in which to store git repositories, 'libs' by default
+    cleanup true // Whether to cleanup unused dirs inside 'libs' dir, true by default
+    defaultAuthGroup 'group name' // Default auth group to be used for all repos. See `Credentials` section below.
+}
+```
 
 ### Usage ###
 
-Now in `build.gradle` add the following:
+Now in project's `build.gradle` add the following:
 
-    git {
-        implementation 'https://example.com/repository.git', {
-            name 'DependencyName'
-            commit '12345678abcdefgh'
-        }
+```
+git {
+    implementation 'https://example.com/repository.git', {
+        name 'DependencyName'
+        commit '12345678abcdefgh'
     }
+}
+```
 
 Where `implementation` is a configuration name, similar as used for regular gradle dependencies.
 Can be any valid configuration name.
@@ -64,28 +80,31 @@ use explicit commit or tag instead.
 You can also specify git repos in `settings.gradle` similar as it is done in `build.gradle`
 but use `fetch` instead of configuration name:
 
-    git {
-        fetch 'https://example.com/repository.git', {
-            dir '$rootDir/gradle/scripts' 
-            tag 'v1.2.3'
-        }
+```
+git {
+    fetch 'https://example.com/repository.git', {
+        dir '$rootDir/gradle/scripts' 
+        tag 'v1.2.3'
     }
+}
+```
 
 Such repositories will be downloaded but not added as dependencies.
 This can be useful, for example, if you want to pre-fetch build scripts.
 
 ### Examples ###
 
-    git {
-        implementation 'git@github.com:alexvasilkov/GestureViews.git'
+```
+git {
+    implementation 'git@github.com:alexvasilkov/GestureViews.git'
 
-        api 'https://github.com/alexvasilkov/GestureViews.git', {
-            name 'GestureViews'
-            tag 'v2.6.0'
-            projectPath '/library'
-        }
+    api 'https://github.com/alexvasilkov/GestureViews.git', {
+        name 'GestureViews'
+        tag 'v2.6.0'
+        projectPath '/library'
     }
-
+}
+```
 
 ### How it works ###
 
@@ -96,7 +115,7 @@ at specified commit, tag or branch.
 4. Dependencies are resolved recursively, i.e. your git dependency can have other git dependencies.
 5. If several projects have dependencies with same name then all other details (url, commit, etc)
 should be completely the same, otherwise build process will fail.
-6. Plugin automatically updates repository if `commit` does not much local commit. If there are any
+6. The plugin automatically updates repository if `commit` doesn't much local commit. If there're any
 uncommited changes in local repo then build process will fail until you manually resolve conflicts.
 7. Removed dependencies will be automatically cleaned from `libs` directory.
 
