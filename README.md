@@ -83,7 +83,7 @@ but use `fetch` instead of configuration name:
 ```
 git {
     fetch 'https://example.com/repository.git', {
-        dir 'gradle/scripts' 
+        dir "$rootDir/gradle/scripts"
         tag 'v1.2.3'
     }
 }
