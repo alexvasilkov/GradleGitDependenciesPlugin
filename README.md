@@ -44,6 +44,8 @@ git {
 
 ### Usage ###
 
+**Note that the plugin only works with Groovy scripts, no Kotlin DSL support is available yet.**
+
 Now in project's `build.gradle` add the following:
 
 ```
