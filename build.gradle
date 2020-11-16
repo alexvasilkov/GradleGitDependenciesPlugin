@@ -6,7 +6,7 @@ apply plugin: 'groovy'
 
 ext.group = 'com.alexvasilkov'
 ext.artifactId = 'gradle-git-dependencies'
-ext.version = '2.0.1'
+ext.version = '2.0.2'
 ext.name = 'Git Dependencies plugin'
 ext.description = 'Gradle plugin to add external git repos as project dependencies'
 ext.github = 'https://github.com/alexvasilkov/GradleGitDependenciesPlugin'
