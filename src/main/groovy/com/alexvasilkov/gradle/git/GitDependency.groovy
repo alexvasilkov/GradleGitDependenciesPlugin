@@ -32,7 +32,7 @@ class GitDependency {
         needsAuth = authGroup || builder.username || builder.password
         username = needsAuth ? (builder.username ?: credentials.username(authGroup)) : null
         password = needsAuth ? (builder.password ?: credentials.password(authGroup)) : null
-        keepUpdated = builder.keepUpdated ?: true
+        keepUpdated = builder.keepUpdated == null ? true : builder.keepUpdated
 
         projectName = ":$name"
         projectDir = projectPath == null || dir == null ? dir : new File(dir, projectPath)
