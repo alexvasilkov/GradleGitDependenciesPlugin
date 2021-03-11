@@ -10,6 +10,8 @@ import org.gradle.api.GradleException
 
 class GitUtils {
 
+    private GitUtils() {}
+
     static void init(GitDependency repo) {
         Grgit git = openGit(repo)
 
@@ -25,7 +27,7 @@ class GitUtils {
 
             if (repo.keepUpdated && !isLocalCommit(git, targetCommit)) {
                 String localCommit = git.head().id
-                println "Git local version '${localCommit}' is not equal to target " +
+                Log.warn "Local version '${localCommit}' is not equal to target " +
                         "'${targetCommit}' for '${repo.dir}'"
 
                 if (hasLocalChanges(git)) {
@@ -33,7 +35,7 @@ class GitUtils {
                             "'${repo.dir}' contains local changes.\n" +
                             "Commit or revert all changes manually.")
                 } else {
-                    println "Git updating to version '${targetCommit}' for '${repo.dir}'"
+                    Log.warn "Updating to version '${targetCommit}' for '${repo.dir}'"
                     update(git, repo)
                 }
             }
@@ -79,20 +81,20 @@ class GitUtils {
 
     private static void update(Grgit git, GitDependency repo) {
         long start = System.currentTimeMillis()
-        println "Git update started '${repo.url}' at version '${repo.commit}'"
+        Log.info "Update started '${repo.url}' at version '${repo.commit}'"
         git.fetch()
         switchToVersion(git, repo.commit)
         int spent = System.currentTimeMillis() - start
-        println "Git update finished ($spent ms)"
+        Log.info "Update finished ($spent ms)"
     }
 
     private static void cloneRepo(GitDependency repo) {
         long start = System.currentTimeMillis()
-        println "Git clone started '${repo.url}' at version '${repo.commit}'"
+        Log.info "Clone started '${repo.url}' at version '${repo.commit}'"
         Grgit git = Grgit.clone(dir: repo.dir, uri: repo.url, credentials: getCreds(repo))
         switchToVersion(git, repo.commit)
         int spent = System.currentTimeMillis() - start
-        println "Git clone finished ($spent ms)"
+        Log.info "Clone finished ($spent ms)"
     }
 
     private static void switchToVersion(Grgit git, String commit) {

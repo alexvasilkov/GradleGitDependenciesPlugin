@@ -9,11 +9,13 @@ import java.util.regex.Pattern
 
 class IdeaUtils {
 
+    private IdeaUtils() {}
+
     static void cleanModules(File rootDir, Dependencies dependencies) {
         try {
             cleanModulesInternal(rootDir, dependencies)
         } catch (Exception ex) {
-            println "Git dependency: Cannot clean up .idea/modules.xml file. ${ex.message}"
+            Log.warn "Cannot clean up .idea/modules.xml file. ${ex.message}"
         }
     }
 
@@ -57,11 +59,11 @@ class IdeaUtils {
                 // for single path or if corresponding .iml file doesn't exist.
                 boolean delete = files.size() > 1 || !new File(dep.projectDir, files[0]).exists()
                 if (delete) {
-                    println "Git dependency: Removing invalid module '$path' from .idea/modules.xml"
+                    Log.info "Removing invalid module '$path' from .idea/modules.xml"
                     files.each { String fileName ->
                         File file = new File(dep.projectDir, fileName)
                         if (file.exists()) {
-                            println "Git dependency: Deleting file $path/$fileName"
+                            Log.info "Deleting file $path/$fileName"
                             file.delete()
                         }
                     }

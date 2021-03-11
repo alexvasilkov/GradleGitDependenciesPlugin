@@ -2,6 +2,7 @@ package com.alexvasilkov.gradle.git
 
 import com.alexvasilkov.gradle.git.utils.GitUtils
 import com.alexvasilkov.gradle.git.utils.IdeaUtils
+import com.alexvasilkov.gradle.git.utils.Log
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.initialization.ProjectDescriptor
@@ -162,7 +163,7 @@ class SettingsPlugin implements Plugin<Settings> {
             closure.rehydrate(builder, owner, builder).call()
         }
 
-        return new GitDependency(props, credentials, settings.rootDir, builder)
+        return new GitDependency(props, credentials, builder)
     }
 
     private void cleanup() {
@@ -184,9 +185,9 @@ class SettingsPlugin implements Plugin<Settings> {
                         .toString()
 
                 if (GitUtils.hasLocalChangesInDir(dir)) {
-                    println "Git dependency: Skipping git directory deletion for $relativePath"
+                    Log.warn "Skipping directory deletion for $relativePath"
                 } else {
-                    println "Git dependency: Deleting unknown directory $relativePath"
+                    Log.warn "Deleting unknown directory $relativePath"
                     dir.deleteDir()
                 }
             }

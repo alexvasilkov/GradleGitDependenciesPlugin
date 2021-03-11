@@ -1,7 +1,5 @@
 package com.alexvasilkov.gradle.git
 
-import org.gradle.api.invocation.Gradle
-
 class Credentials {
 
     private static final USERNAME = 'username'

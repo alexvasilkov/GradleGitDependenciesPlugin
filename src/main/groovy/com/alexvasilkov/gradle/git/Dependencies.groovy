@@ -1,6 +1,7 @@
 package com.alexvasilkov.gradle.git
 
 import com.alexvasilkov.gradle.git.utils.GitUtils
+import com.alexvasilkov.gradle.git.utils.Log
 
 class Dependencies {
 
@@ -19,7 +20,7 @@ class Dependencies {
         }
 
         if (projectName == null) {
-            println "Git dependency: Added '${dependency.name}'"
+            Log.info "Added '${dependency.name}'"
         } else {
             // Adding per-project dependency
             List<GitDependency> list = byProject.get(projectName)
@@ -29,7 +30,7 @@ class Dependencies {
             }
             list.add(dependency)
 
-            println "Git dependency: Added '${dependency.name}' for '$projectName'"
+            Log.info "Added '${dependency.name}' for '$projectName'"
         }
 
         GitUtils.init(dependency)

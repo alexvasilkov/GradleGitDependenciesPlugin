@@ -21,7 +21,7 @@ class GitDependency {
     final String projectName
     final File projectDir
 
-    GitDependency(SettingsExtension props, Credentials credentials, File rootDir, Builder builder) {
+    GitDependency(SettingsExtension props, Credentials credentials, Builder builder) {
         configName = builder.configName
         url = builder.url
         name = builder.name ?: getNameFromUrl(url)
