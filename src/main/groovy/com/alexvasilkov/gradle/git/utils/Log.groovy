@@ -1,16 +1,16 @@
 package com.alexvasilkov.gradle.git.utils
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.gradle.api.logging.Logger
+import org.gradle.api.logging.Logging
 
 class Log {
 
-    private static final Logger logger = LoggerFactory.getLogger("git-dependencies-plugin")
+    private static final Logger logger = Logging.getLogger("git-dependencies-plugin")
 
     private Log() {}
 
     static void info(String msg) {
-        logger.info("Git dependency: $msg")
+        logger.lifecycle("Git dependency: $msg")
     }
 
     static void warn(String msg) {
