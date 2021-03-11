@@ -13,14 +13,14 @@ ext.github = 'https://github.com/alexvasilkov/GradleGitDependenciesPlugin'
 ext.githubScm = 'scm:git@github.com:alexvasilkov/GradleGitDependenciesPlugin.git'
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
 
-    implementation 'org.ajoberstar.grgit:grgit-core:4.0.2'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r'
 }
 
 // Build & upload to maven: './gradlew clean build publish'
