@@ -8,6 +8,8 @@ import org.eclipse.jgit.lib.Constants
 import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.lib.Ref
 import org.eclipse.jgit.transport.CredentialsProvider
+import org.eclipse.jgit.transport.JschConfigSessionFactory
+import org.eclipse.jgit.transport.SshSessionFactory
 import org.eclipse.jgit.transport.TagOpt
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import org.gradle.api.GradleException
@@ -17,6 +19,14 @@ class GitUtils {
     private GitUtils() {}
 
     static void init(GitDependency dep) {
+        // For SSH to work with JGit 5.8+ we have to manually set the SSH factory because default
+        // ServiceLoader mechanism does not seem to work with Gradle plugins.
+        SshSessionFactory.instance = new JschConfigSessionFactory()
+
+        // Jsch does not really work well so we'd better rely on system "ssh" command.
+        // To do so we'll manually try to find "ssh" in local PATH and set it as "GIT_SSH" for Jgit.
+        SshSystemReader.install()
+
         final Git git = openGit(dep)
 
         if (git != null) {
