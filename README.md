@@ -13,7 +13,7 @@ In `settings.gradle` file add the following lines:
 
 ```
 plugins {
-    id 'com.alexvasilkov.git-dependencies' version '2.0.3'
+    id 'com.alexvasilkov.git-dependencies' version '2.0.4'
 }
 ```
 
@@ -25,7 +25,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.alexvasilkov:gradle-git-dependencies:2.0.3'
+        classpath 'com.alexvasilkov:gradle-git-dependencies:2.0.4'
     }
 }
 
