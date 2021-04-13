@@ -20,7 +20,8 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
 
-    implementation 'org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:5.11.0.202103091610-r'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:5.11.0.202103091610-r'
 }
 
 // Build & upload to maven: './gradlew clean build publish'
