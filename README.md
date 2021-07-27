@@ -46,7 +46,7 @@ git {
 
 **Note that the plugin only works with Groovy scripts, no Kotlin DSL support is available yet.**
 
-Now in project's `build.gradle` add the following:
+Now in module's `build.gradle` add the following:
 
 ```
 git {
