@@ -65,7 +65,7 @@ Can be any valid configuration name.
 | Parameter       | Description |
 | --------------- | ----------- |
 | name            | Dependency name. Will be used as gradle project name and as repo directory name. If the name is not set then it will be taken from url. |
-| commit          | Git commit id of any length, tag name or branch name. For example `e628b205`, `v1.2.3`. Set to `master` by default. |
+| commit          | Git commit id of any length, tag name or full branch name. For example `e628b205`, `v1.2.3`, `origin/master`. |
 | tag             | Same as `commit`, see above. |
 | branch          | Same as `commit`, see above. |
 | dir             | Directory for cloned repository. Used to override default directory as defined in `settings.gradle`. |
